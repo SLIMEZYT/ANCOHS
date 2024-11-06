@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Student Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Details</h1>
+        <form id="studentForm">
+            <label for="name">Student Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="email">Student Email:</label>
+            <input type="email" id="email" required>
+
+            <label for="grade">Grade:</label>
+            <input type="text" id="grade" required>
+
+            <button type="button" onclick="submitDetails()">Submit</button>
+        </form>
+        <button onclick="printDetails()">Print Details</button>
+    </div>
+
+    <script>
+        function printDetails() {
+            var printContents = document.getElementById('studentForm').innerHTML;
+            var newWindow = window.open('', '', 'height=400,width=600');
+            newWindow.document.write('<html><head><title>Print Details</title></head><body>');
+            newWindow.document.write(printContents);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            newWindow.print();
+        }
+
+        function submitDetails() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const grade = document.getElementById('grade').value;
+
+            // Send data to PHP script
+            fetch('submit.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, grade }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('Details submitted successfully!');
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
